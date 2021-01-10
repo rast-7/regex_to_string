@@ -171,7 +171,6 @@ class StringGenerator(object):
         Current index is on '[', the start of the character set.
 
         """
-        # import ipdb; ipdb.set_trace()
         chars = ""
         c = None
         cnt = 1
