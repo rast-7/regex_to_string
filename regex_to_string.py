@@ -129,12 +129,12 @@ class StringGenerator(object):
             d = self.next()
             if not d:
                 raise Exception("unexpected end of input getting quantifier")
-            if d == ":" or d == "-" or d == ",":
+            if d == "-" or d == ",":
                 start = int(digits)
                 digits = "0"
                 continue
             if d == "}":
-                if self.last() in ":-":
+                if self.last() in ",-":
                     # this happens if the user thinks the quantifier
                     # behaves like python slice notation in allowing uppper range to be open
                     raise StringGenerator.SyntaxError("quantifier range must be closed")
@@ -214,7 +214,12 @@ class StringGenerator(object):
             if not c or (c in self.meta_chars):
                 break
             else:
-                chars += c
+                if self.lookahead() == "?":
+                    repeat = randint(0, 1)
+                    chars += (c * repeat)
+                    c = self.next()
+                else:
+                    chars += c
             if self.lookahead() and self.lookahead() in self.meta_chars:
                 break
             c = self.next()
@@ -328,4 +333,4 @@ class StringGenerator(object):
         return rendered_list
 
 
-print(StringGenerator("gr(a|e)y").render())
+print(StringGenerator("colou?rs").render())
