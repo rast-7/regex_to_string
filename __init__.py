@@ -375,3 +375,20 @@ class StringGenerator(object):
             total_attempts += 1
 
         return rendered_list
+
+
+def generate(template, unique_strings=1):
+    """Use this function as the interface to the StringGenerator class.
+
+    Args:
+        template (str): the regular expression template
+        unique_strings (int): number of unique strings to be generated
+
+    """
+    # remove the / from the starting and end
+    template = str(template)
+    template = template.replace('/', '')
+
+    strings = StringGenerator(template).render_list(int(unique_strings))
+    for string in strings:
+        print(string)
