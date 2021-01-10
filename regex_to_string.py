@@ -24,6 +24,10 @@ class StringGenerator(object):
 
     meta_chars = "[]{}()|"
 
+    allowed_chars = set(string.digits + string.ascii_lowercase + \
+                    string.ascii_uppercase + string.whitespace + string.punctuation)
+
+
     class Node(object):
         """The abstract class for all nodes"""
 
@@ -172,6 +176,10 @@ class StringGenerator(object):
         cnt = 1
         start = 0
 
+        negate = False
+        if self.lookahead() == "^":
+            negate = True
+
         while True:
             c = self.next()
             if self.lookahead() == "-":
@@ -209,6 +217,10 @@ class StringGenerator(object):
                 )
             if not c:
                 break
+
+        if negate:
+            chars_to_use = self.allowed_chars - set(chars)
+            chars = ''.join(str(char) for char in chars_to_use)
 
         return StringGenerator.CharacterSet(chars, start, cnt)
 
@@ -351,4 +363,4 @@ class StringGenerator(object):
         return rendered_list
 
 
-print(StringGenerator("col[ou]+rs").render())
+print(StringGenerator("col[^ou]+rs").render())
