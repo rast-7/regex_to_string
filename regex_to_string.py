@@ -190,6 +190,10 @@ class StringGenerator(object):
                     start = 0
                     cnt = 1
                     self.next() #skip the ?
+                elif self.lookahead() == "*":
+                    start = 0
+                    cnt = randint(0, len(self.pattern))
+                    self.next() #skip the *
                 else:
                     start = -1
                     cnt = 1
@@ -216,6 +220,11 @@ class StringGenerator(object):
             else:
                 if self.lookahead() == "?":
                     repeat = randint(0, 1)
+                    chars += (c * repeat)
+                    c = self.next()
+                elif self.lookahead() == "*":
+                    upper_limit = randint(0, len(self.pattern))
+                    repeat = randint(0, upper_limit)
                     chars += (c * repeat)
                     c = self.next()
                 else:
@@ -333,4 +342,4 @@ class StringGenerator(object):
         return rendered_list
 
 
-print(StringGenerator("colou?rs").render())
+print(StringGenerator("col[ou]?rs").render())
