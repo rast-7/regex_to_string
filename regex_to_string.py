@@ -95,8 +95,10 @@ class StringGenerator(object):
         self.seq = None
         self.index = -1
         self.unique_attempts_factor = uaf
+        self.sets_in_seq = 0
         # breakpoint()
         self.seq = self.getSequence()
+        print(self.seq.render())
 
     def current(self):
         if self.index < len(self.pattern):
@@ -269,8 +271,12 @@ class StringGenerator(object):
                 break
             if c and c not in self.meta_chars:
                 seq.append(self.getLiteral())
+                self.sets_in_seq += 1
             elif c == "[":
                 seq.append(self.getCharacterSet())
+                print(seq[-1].render())
+                if level:
+                    self.sets_in_seq += 1
             elif c == "(":
                 seq.append(self.getSequence(level + 1))
             elif c == ")":
@@ -278,6 +284,20 @@ class StringGenerator(object):
                 if level == 0:
                     # there should be no parens here
                     raise StringGenerator.SyntaxError("Extra closing parenthesis")
+                elif self.lookahead() == "{":
+                    [start, cnt] = self.getQuantifier()
+                    if start > -1:
+                        times = randint(start, cnt)
+                    else:
+                        times = cnt - 1
+                    print(f"{start}, {cnt}")
+                    print(f"times = {times}")
+                    repeat = len(seq) - self.sets_in_seq
+                    elements_to_repeat = seq[repeat: len(seq)]
+                    for time in range(times):
+                        for element in elements_to_repeat:
+                            seq.append(element)
+                    self.set_in_seq = 0
                 sequence_closed = True
                 break
             elif c == "|":
@@ -363,4 +383,4 @@ class StringGenerator(object):
         return rendered_list
 
 
-print(StringGenerator("col[^ou]+rs").render())
+print(StringGenerator('(1[0-2]|0[1-9])(:[0-5][0-9]){2} (A|P)M', 10).render())
