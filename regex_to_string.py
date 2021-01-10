@@ -98,7 +98,6 @@ class StringGenerator(object):
         self.sets_in_seq = 0
         # breakpoint()
         self.seq = self.getSequence()
-        print(self.seq.render())
 
     def current(self):
         if self.index < len(self.pattern):
@@ -274,7 +273,6 @@ class StringGenerator(object):
                 self.sets_in_seq += 1
             elif c == "[":
                 seq.append(self.getCharacterSet())
-                print(seq[-1].render())
                 if level:
                     self.sets_in_seq += 1
             elif c == "(":
@@ -290,8 +288,6 @@ class StringGenerator(object):
                         times = randint(start, cnt)
                     else:
                         times = cnt - 1
-                    print(f"{start}, {cnt}")
-                    print(f"times = {times}")
                     repeat = len(seq) - self.sets_in_seq
                     elements_to_repeat = seq[repeat: len(seq)]
                     for time in range(times):
@@ -304,7 +300,6 @@ class StringGenerator(object):
                 op = c
             else:
                 if c in self.meta_chars:
-                    print(c)
                     raise StringGenerator.SyntaxError(
                         "Un-escaped special character: %s" % c
                     )
@@ -383,4 +378,4 @@ class StringGenerator(object):
         return rendered_list
 
 
-print(StringGenerator('(1[0-2]|0[1-9])(:[0-5][0-9]){2} (A|P)M', 10).render())
+print(StringGenerator('', 10).render())
