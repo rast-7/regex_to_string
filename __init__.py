@@ -375,6 +375,3 @@ class StringGenerator(object):
             total_attempts += 1
 
         return rendered_list
-
-
-print(StringGenerator('', 10).render())
